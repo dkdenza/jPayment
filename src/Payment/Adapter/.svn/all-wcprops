@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/mglobe/!svn/ver/15709/application/classes/Payment/Payment/Adapter
+END
+Paysbuy.php
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/mglobe/!svn/ver/15709/application/classes/Payment/Payment/Adapter/Paysbuy.php
+END
+Paysbuy_Advance.php
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/mglobe/!svn/ver/15709/application/classes/Payment/Payment/Adapter/Paysbuy_Advance.php
+END
+AdapterInterface.php
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/mglobe/!svn/ver/15709/application/classes/Payment/Payment/Adapter/AdapterInterface.php
+END
+AdapterAbstract.php
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/mglobe/!svn/ver/15709/application/classes/Payment/Payment/Adapter/AdapterAbstract.php
+END
+Kbank.php
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/mglobe/!svn/ver/15709/application/classes/Payment/Payment/Adapter/Kbank.php
+END
+Paypal.php
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/mglobe/!svn/ver/15709/application/classes/Payment/Payment/Adapter/Paypal.php
+END

@@ -1,0 +1,37 @@
+<?php
+
+interface Payment_Adapter_AdapterInterface {
+	
+	/**
+	 * Construct the adapter
+	 */
+	public function __construct($opts=array());
+	
+	/**
+	 * Gateway sandbox enable
+	 */
+	public function useSandbox($val=true);
+	
+	/**
+	 * Transform payment fields and build to array
+	 */
+	public function build($opts=array());
+	
+	/**
+	 * Render the HTML payment Form
+	 */
+	public function render($opts=array());
+	
+	/**
+	 * Get post frontend result from API gateway
+	 */
+	public function getFrontendResult();
+	
+	/**
+	 * Get post backend result from API gateway
+	 */
+	public function getBackendResult();
+
+}
+
+?>
