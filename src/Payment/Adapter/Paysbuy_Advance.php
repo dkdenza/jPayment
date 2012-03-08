@@ -399,10 +399,13 @@ class Payment_Adapter_Paysbuy_Advance extends Payment_Adapter_AdapterAbstract {
 		
 		// invoice from response
 		$invoice = substr($postdata['result'], 2);
+		
+		// for advance paysbuy API using username as email
+		$merchantEmail = $this->_username;
 
 		try {
 			$params = array(
-				'merchantEmail' => $this->_merchantAccount, 
+				'merchantEmail' => $merchantEmail, 
 				'invoiceNo'     => $invoice,			 
 				'strApCode'     => $postdata['apCode']
 			);
