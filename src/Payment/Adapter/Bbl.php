@@ -262,16 +262,14 @@ class Payment_Adapter_Bbl extends Payment_Adapter_AdapterAbstract {
 					'status' => true,
 					'data' => array(
 						'gateway'  => self::GATEWAY,
-						'status'   => "Success",
+						'status'   => "success",
 						'invoice'  => $invoice,
 						'currency' => $this->_currency,
 						'amount'   => 0,				
 						'dump'     => serialize($postdata)
-					),
-					'custom' => array(
-						'response_ipn' => $body
 					)
 				);
+				return $result;
 			}
 		}
 		
