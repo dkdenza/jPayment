@@ -25,28 +25,28 @@ require_once('config.inc.php');
  */
 $mp = Payment::factory('kbank', array(
 	'successUrl' => "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."?action=process",
-	'backendUrl' => "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."?action=process"	
+	'backendUrl' => "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."?action=process"
 ));
 
 /**
  * Kbank we need to set both merchant and terminal
  */
 $mp->setMerchantAccount(array(
-	'merchantId' => "[MERCHANT ID]",
-	'terminalId' => "[TERMINAL ID]"
+	'merchantId' => "[YOUR MERCHANT ID]",
+	'terminalId' => "[YOUR TERMINAL ID]"
 ));
 
 /** 
  * Set billing 
  */
-$mp->setInvoice('0001')
+$mp->setInvoice('987677')
 	->setPurpose('Buy Something')
-	->setAmount(10);
+	->setAmount(1);
 	
 /**
- * Set method accept
+ * Set method accept (credit, debit)
  */
-$mp->setMethod('debit');
+$mp->setMethod('credit');
 	
 /**
  * When gateway redirect back with success status
@@ -62,18 +62,26 @@ if ($mp->isSuccessPosted())
 }
 
 /**
- * When gateway POSTED back with status
+ * When gateway redirect back with cancel status
+ */
+if ($mp->isCancelPosted())
+{
+	echo "<h1>Cancel Posted, just redirect the user to sorry page.</h1>";
+	exit(0);
+}
+
+/**
+ * When gateway POSTED back with feed data returned
  */
 if ($mp->isBackendPosted())
 {
-	echo "<h1>Backend Posted, keep the transaction data and update depend on status responded.</h1>";
-	
 	$result = $mp->getBackendResult();
 	$result = print_r($result, true);
 	
-	echo "<pre>".$result."</pre>";
-	file_put_contents('log.txt', $result);
+	$logfile = "../logs/".date('Y-m-d_H-i-s').".log";
+	file_put_contents($logfile, $result);
 	
+	echo "OK";
 	exit(0);
 }
 
@@ -87,13 +95,20 @@ if ($mp->isBackendPosted())
 			h3 { font-size: 1em; font-weight: normal; }
 		</style>
 		<script type="text/javascript">
-			function onDocumentReady() {
+			function paynow() {
 				document.getElementById('form-gateway').submit();
 			}
+			
+			function onDocumentReady() {
+				setTimeout(function() {
+					paynow();
+				}, 20000);
+			}			
 		</script>
 	</head>
 	<body onload="onDocumentReady();">
-		<h3>Waiting to redirect...</h3>
+		<h3>Waiting 20 seconds to redirect.</h3>
 		<?php echo $mp->render(); ?>
+		<a href="javascript:paynow();">Pay Now</a>
 	</body>
 </html>

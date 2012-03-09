@@ -130,9 +130,15 @@ class Payment_Adapter_Paypal extends Payment_Adapter_AdapterAbstract {
 			'cancel_return' => $this->_cancelUrl,
 			'notify_url'    => $this->_backendUrl,
 			'currency_code' => $this->_currency_maps[$this->_currency],
-			'lc'            => $this->_language_maps[$this->_language],
-			'custom'		=> $this->_remark
+			'lc'            => $this->_language_maps[$this->_language]
 		);
+		
+		if ($this->_remark) {
+			$extends = array_merge($extends, array(
+				'custom' => $this->_remark
+			));
+		}
+		
 		$params = array_merge($pass_parameters, $extends);
 		$build_data = array_merge($this->_defaults_params, $params);
 		return $build_data;
@@ -164,14 +170,18 @@ class Payment_Adapter_Paypal extends Payment_Adapter_AdapterAbstract {
 		}	
 		$postdata = $_POST;
 		
+		$statusResult = $postdata['payment_status'];
+		$invoice = $postdata['invoice'];
+		$amount = $this->_decimals($postdata['mc_gross']);
+		
 		$result = array(
 			'status' => true,
 			'data'   => array(
 				'gateway'  => self::GATEWAY,
-				'status'   => $postdata['payment_status'],
-				'invoice'  => $postdata['invoice'],
+				'status'   => $this->_mapStatusReturned($statusResult),
+				'invoice'  => $invoice,
 				'currency' => $this->_currency,
-				'amount'   => $postdata['mc_gross'],				
+				'amount'   => $amount,				
 				'dump'     => serialize($postdata)
 			)
 		);
@@ -201,14 +211,16 @@ class Payment_Adapter_Paypal extends Payment_Adapter_AdapterAbstract {
 			if (preg_match('|VERIFIED|', $body)) 
 			{	
 				$statusResult = $postdata['payment_status'];
+				$invoice = $postdata['invoice'];
+				$amount = $this->_decimals($postdata['mc_gross']);
 				$result = array(
 					'status' => true,
 					'data' => array(
 						'gateway'  => self::GATEWAY,
 						'status'   => $this->_mapStatusReturned($statusResult),
-						'invoice'  => $postdata['invoice'],
+						'invoice'  => $invoice,
 						'currency' => $this->_currency,
-						'amount'   => $postdata['mc_gross'],				
+						'amount'   => $amount,				
 						'dump'     => serialize($postdata)
 					),
 					'custom' => array(

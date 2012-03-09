@@ -405,7 +405,7 @@ abstract class Payment_Adapter_AdapterAbstract implements Payment_Adapter_Adapte
 	 */
 	public function setCancelUrl($val)
 	{
-		$this->_cancelUrl = $this->_addQueryState($val, 'cancel');;
+		$this->_cancelUrl = $this->_addQueryState($val, 'cancel');
 		return $this;
 	}
 	
@@ -431,7 +431,7 @@ abstract class Payment_Adapter_AdapterAbstract implements Payment_Adapter_Adapte
 	 */
 	public function setFailUrl($val)
 	{
-		$this->_failUrl = $this->_addQueryState($val, 'fail');;
+		$this->_failUrl = $this->_addQueryState($val, 'fail');
 		return $this;
 	}
 	
@@ -510,8 +510,7 @@ abstract class Payment_Adapter_AdapterAbstract implements Payment_Adapter_Adapte
 	 */
 	public function isSuccessPosted()
 	{
-		if (array_key_exists('state', $_GET))
-		{
+		if (array_key_exists('state', $_GET)) {
 			return (strcmp($_GET['state'], 'success') == 0);
 		}
 		return false;
@@ -525,8 +524,7 @@ abstract class Payment_Adapter_AdapterAbstract implements Payment_Adapter_Adapte
 	 */
 	public function isCancelPosted()
 	{
-		if (array_key_exists('state', $_GET))
-		{
+		if (array_key_exists('state', $_GET)) {
 			return (strcmp($_GET['state'], 'cancel') == 0);
 		}
 		return false;
@@ -541,8 +539,7 @@ abstract class Payment_Adapter_AdapterAbstract implements Payment_Adapter_Adapte
 	 */
 	public function isFailPosted()
 	{
-		if (array_key_exists('state', $_GET))
-		{
+		if (array_key_exists('state', $_GET)) {
 			return (strcmp($_GET['state'], 'fail') == 0);
 		}
 		return false;
@@ -556,8 +553,7 @@ abstract class Payment_Adapter_AdapterAbstract implements Payment_Adapter_Adapte
 	 */
 	public function isBackendPosted()
 	{
-		if (array_key_exists('state', $_GET) && count($_POST) > 0)
-		{
+		if (array_key_exists('state', $_GET) && count($_POST) > 0) {
 			return (strcmp($_GET['state'], 'backend') == 0);
 		}
 	}
@@ -662,6 +658,19 @@ abstract class Payment_Adapter_AdapterAbstract implements Payment_Adapter_Adapte
 			}
 		}
 		return "other";
+	}
+	
+	/**
+	 * Change integer to real number format 
+	 * 
+	 * @access protected
+	 * @param  integer
+	 * @param  integer $decimals (default: 2)
+	 * @return float
+	 */
+	protected function _decimals($int, $decimals=2) 
+	{
+		return number_format($int, $decimals, '.', '');
 	}
 		
 } 

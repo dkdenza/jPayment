@@ -25,12 +25,11 @@ require_once('config.inc.php');
  */
 $mp = Payment::factory('paysbuy_advance', array(
 	'successUrl'    => "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."?action=process",
-	'cancelUrl'     => "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."?action=process",
 	'backendUrl'    => "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."?action=process"	
 ));
 
 /**
- * Set merchant account 
+ * Sandbox account
  *
  user : demo@paysbuy.com
  password : paysbuy123
@@ -48,9 +47,9 @@ $mp->setMerchantAccount(array(
 	'secureCode' => "1586093A8F80CBB5003001B42F0EEB7C"
 ))->setSandboxMode(true);
 
-
 /**
  * Set payment method (depend on your account)
+ * Set force method (cannot change after submitted)
  */
 $mp->setMethod('06')
 	->setForceMethod(true);
@@ -68,7 +67,11 @@ $mp->setLanguage('TH')
 $mp->setInvoice('11111')
 	->setPurpose('Buy Something')
 	->setAmount(1);
-	
+
+/**
+ * Set remark
+ */
+$mp->setRemark('Something to note.');
 	
 /**
  * When gateway redirect back with success status
@@ -83,24 +86,29 @@ if ($mp->isSuccessPosted())
 	exit(0);
 }
 
+/**
+ * When gateway redirect back with cancel status
+ */
+if ($mp->isCancelPosted())
+{
+	echo "<h1>Cancel Posted, just redirect the user to sorry page.</h1>";
+	exit(0);
+}
 
 /**
  * When gateway POSTED back with status
  */
 if ($mp->isBackendPosted())
 {
-	echo "<h1>Backend Posted, keep the transaction data and update depend on status responded.</h1>";
-	
 	$result = $mp->getBackendResult();
 	$result = print_r($result, true);
 	
-	echo "<pre>".$result."</pre>";
-	file_put_contents('log.txt', $result);
+	$logfile = "../logs/".date('Y-m-d_H-i-s').".log";
+	file_put_contents($logfile, $result);
 	
+	echo "OK";
 	exit(0);
 }
-
-//echo highlight_string( $mp->render() , true); exit(0);
 
 ?>
 <!DOCTYPE html>
@@ -112,13 +120,20 @@ if ($mp->isBackendPosted())
 			h3 { font-size: 1em; font-weight: normal; }
 		</style>
 		<script type="text/javascript">
-			function onDocumentReady() {
+			function paynow() {
 				document.getElementById('form-gateway').submit();
 			}
+			
+			function onDocumentReady() {
+				setTimeout(function() {
+					paynow();
+				}, 20000);
+			}			
 		</script>
 	</head>
 	<body onload="onDocumentReady();">
-		<h3>Waiting to redirect...</h3>
+		<h3>Waiting 20 seconds to redirect.</h3>
 		<?php echo $mp->render(); ?>
+		<a href="javascript:paynow();">Pay Now</a>
 	</body>
 </html>

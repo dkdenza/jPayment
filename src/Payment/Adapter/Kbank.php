@@ -64,6 +64,11 @@ class Payment_Adapter_Kbank extends Payment_Adapter_AdapterAbstract {
 		'FILLSPACE'   => "Y",
 		'CHECKSUM'    => ""
 	);
+	
+	/**
+	 * @var status return for success
+	 */
+	protected $_success_group = array('00');
 
 	/**
 	 * Construct the payment adapter
@@ -179,6 +184,46 @@ class Payment_Adapter_Kbank extends Payment_Adapter_AdapterAbstract {
 	}
 	
 	/**
+	 * State of success payment returned.
+	 * override from abstract 
+	 * 
+	 * @access public
+	 * @return bool
+	 */
+	public function isSuccessPosted()
+	{
+		if (parent::isSuccessPosted()) 
+		{
+			if (isset($_POST) && array_key_exists('HOSTRESP', $_POST))
+			{
+				$statusResult = $_POST['HOSTRESP'];
+				return (in_array($statusResult, $this->_success_group));
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * State of canceled payment returned.
+	 * override from abstract 
+	 * 
+	 * @access public
+	 * @return bool
+	 */
+	public function isCancelPosted()
+	{
+		if (parent::isSuccessPosted()) 
+		{
+			if (isset($_POST) && array_key_exists('HOSTRESP', $_POST))
+			{
+				$statusResult = $_POST['HOSTRESP'];
+				return (!in_array($statusResult, $this->_success_group));
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * Build array data and mapping from API
 	 * 
 	 * @access public
@@ -242,12 +287,35 @@ class Payment_Adapter_Kbank extends Payment_Adapter_AdapterAbstract {
 	 */
 	public function getFrontendResult()
 	{		
-		// not implement yet.
+		if (count($_POST) == 0 || !array_key_exists('HOSTRESP', $_POST)) {
+			return false;
+		}	
+		$postdata = $_POST;
+		
+		$hostresp = $postdata['HOSTRESP'];
+		$statusResult = (in_array($hostresp, $this->_success_group)) ? "success" : "pending";
+		$invoice = (int)$postdata['RETURNINV'];
+		$amount = ($postdata['AMOUNT'] / 100);
+		$amount = $this->_decimals($amount);
+		
+		$result = array(
+			'status' => true,
+			'data'   => array(
+				'gateway'  => self::GATEWAY,
+				'status'   => $this->_mapStatusReturned($statusResult),
+				'invoice'  => $invoice,
+				'currency' => $this->_currency,
+				'amount'   => $amount,				
+				'dump'     => serialize($postdata)
+			)
+		);
+		return $result;
 	}
 	
 	/**
 	 * Get data posted to background process.
-	 * Kbank need only trust SSL to return data feed.
+	 * To enable this feature you need to contect K-Bank directly
+	 * K-Bank need only trust SSL to return data feed.
 	 * 
 	 * @access public
 	 * @return array
@@ -257,7 +325,56 @@ class Payment_Adapter_Kbank extends Payment_Adapter_AdapterAbstract {
 		if (isset($_POST) && count($_POST) > 0)
 		{
 			$postdata = $_POST;
-			return $postdata;
+			if (array_key_exists('PMGWRESP', $postdata))
+			{
+				// mapping variables
+				$pmgwresp = $postdata['PMGWRESP'];
+				$splitters = array(
+					'ResponseCode'  => array(1, 2),
+					'Reserved1'     => array(3, 12),
+					'Authorize'     => array(15, 6),
+					'Reserved2'     => array(21, 36),
+					'TransAmount'   => array(83, 12),
+					'Invoice'       => array(57, 12),					
+					'Timestamp'     => array(69, 14),
+					'Reserved3'     => array(95, 40),
+					'CardType'      => array(135, 20),
+					'Reserved4'     => array(155, 40),
+					'THBAmount'     => array(195, 12),
+					'TransCurrency' => array(207, 3),
+					'FXRate'        => array(210, 12)
+				);
+				$response = array();
+				foreach ($splitters as $var_name => $pos) 
+				{
+					$begin = $pos[0] - 1;
+					$ended = $pos[1];
+					
+					$theValue = substr($pmgwresp, $begin, $ended);
+					$theValue = preg_replace('|X+|', '', $theValue);
+					
+					$response[$var_name] = $theValue;
+				}		
+					
+				
+				$statusResult = (in_array($response['ResponseCode'], $this->_success_group)) ? "success" : "pending";
+				$invoice = (int)$response['Invoice'];
+				$amount = ($response['TransAmount'] / 100);
+				$amount = $this->_decimals($amount, 2);
+				
+				$result = array(
+					'status' => true,
+					'data' => array(
+						'gateway'  => self::GATEWAY,
+						'status'   => $this->_mapStatusReturned($statusResult),
+						'invoice'  => $invoice,
+						'currency' => $this->_currency,
+						'amount'   => $amount,				
+						'dump'     => serialize($response)
+					)
+				);
+				return $result;
+			}
 		}
 		
 		$result = array(

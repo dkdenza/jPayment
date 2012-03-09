@@ -244,12 +244,14 @@ class Payment_Adapter_Bbl extends Payment_Adapter_AdapterAbstract {
 		if (isset($_GET['Ref']))
 		{
 			$invoice = $_GET['Ref'];
+			$statusResult = "pending";
+			
 			$postdata = array();
 			$result = array(
 				'status' => true,
 				'data'   => array(
 					'gateway'  => self::GATEWAY,
-					'status'   => "unknown",
+					'status'   => $this->_mapStatusReturned($statusResult),
 					'invoice'  => $invoice,
 					'currency' => $this->_currency,
 					'amount'   => 0,
@@ -263,6 +265,7 @@ class Payment_Adapter_Bbl extends Payment_Adapter_AdapterAbstract {
 	
 	/**
 	 * Get data posted to background process.
+	 * To enable this feature you need to contect BBL directly
 	 * Bbl need only trust SSL to return data feed.
 	 * [IMPORTANT] For response back to Gateway you need to type "OK" on HTML.
 	 * 
@@ -276,9 +279,9 @@ class Payment_Adapter_Bbl extends Payment_Adapter_AdapterAbstract {
 			$postdata = $_POST;
 			if (array_key_exists('successcode', $postdata))
 			{
-				$statusResult = ($postdata['successcode'] == 0) ? "success" : "failed";
+				$statusResult = ($postdata['successcode'] == 0) ? "success" : "pending";
 				$invoice = $postdata['Ref'];
-				$ref = $postdata['PayRef'];
+				$amount = $this->_decimals($postdata['Amt']);
 				$result = array(
 					'status' => true,
 					'data' => array(
@@ -286,7 +289,7 @@ class Payment_Adapter_Bbl extends Payment_Adapter_AdapterAbstract {
 						'status'   => $this->_mapStatusReturned($statusResult),
 						'invoice'  => $invoice,
 						'currency' => $this->_currency,
-						'amount'   => $postdata['Amt'],				
+						'amount'   => $amount,				
 						'dump'     => serialize($postdata)
 					)
 				);

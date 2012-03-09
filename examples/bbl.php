@@ -31,15 +31,20 @@ require_once('config.inc.php');
 $mp = Payment::factory('bbl', array(
 	'successUrl' => "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."?action=process",
 	'cancelUrl'  => "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."?action=process",
-	'failUrl'    => "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."?action=process",
-	'backendUrl' => "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."?action=process"	
+	'failUrl'    => "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."?action=process"
 ));
+
+/**
+ * Set URL to feed data 
+ * To enable this feature you need to contect BBL directly 
+ */
+$mp->setBackendUrl('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'?action=process');
 
 /**
  * Bbl we need to set both merchant and terminal
  */
 $mp->setMerchantAccount(array(
-	'merchantId' => "[MERCHANT ID]"
+	'merchantId' => "[YOUR MERCHANT ID]"
 ));
 
 /**
@@ -55,8 +60,28 @@ $mp->setInvoice('10000071')
 	->setPurpose('Buy Something')
 	->setAmount(1);
 	
+/**
+ * Set method payment CC, ALL
+ */
 $mp->setMethod('CC');
 
+/**
+ * Set remark
+ */
+$mp->setRemark('Something like note');
+
+/**
+ * Set ref maximum is 5 [option]
+ */
+$mp->setAny('ref1', "Sub Ref1");
+$mp->setAny('ref2', "Sub Ref2");
+$mp->setAny('ref3', "Sub Ref3");
+$mp->setAny('ref4', "Sub Ref4");
+$mp->setAny('ref5', "Sub Ref5");
+
+/**
+ * When gateway redirect back with success status
+ */	
 if ($mp->isSuccessPosted()) 
 {
 	$result = $mp->getFrontendResult();
@@ -64,35 +89,38 @@ if ($mp->isSuccessPosted())
 	exit(0);
 }
 
+/**
+ * When gateway redirect back with fail status
+ */
 if ($mp->isFailPosted()) 
 {
 	echo "Reject from gateway, so what next?";
 	exit(0);
 }
 
+/**
+ * When gateway POSTED back with cancel status
+ */
 if ($mp->isCancelPosted()) 
 {
 	echo "User canceled or Gateway rejected, so do something.";
 	exit(0);
 }
 
+/**
+ * When gateway POSTED back with feed data returned
+ */
 if ($mp->isBackendPosted()) 
 {
-	//echo "Data feed from gateway.";
 	$result = $mp->getBackendResult();
-	echo "<pre>".print_r($result, true)."</pre>";
-	
-	// Bbl need text "OK" to response to data feed.
+	$result = print_r($result, true);
+
+	$logfile = "../logs/".date('Y-m-d_H-i-s').".log";
+	file_put_contents($logfile, $result);
+
 	echo "OK";
 	exit(0);
 }
-
-$mp->setAny('ref1', "Sub Ref1");
-$mp->setAny('ref2', "Sub Ref2");
-$mp->setAny('ref3', "Sub Ref3");
-$mp->setAny('ref4', "Sub Ref4");
-$mp->setAny('ref5', "Sub Ref5");
-
 
 ?>
 <!DOCTYPE html>
@@ -104,16 +132,20 @@ $mp->setAny('ref5', "Sub Ref5");
 			h3 { font-size: 1em; font-weight: normal; }
 		</style>
 		<script type="text/javascript">
-			function onDocumentReady() {
+			function paynow() {
 				document.getElementById('form-gateway').submit();
 			}
+			
+			function onDocumentReady() {
+				setTimeout(function() {
+					paynow();
+				}, 20000);
+			}			
 		</script>
 	</head>
 	<body onload="onDocumentReady();">
-		<h3>Waiting to redirect...</h3>
-		<?php echo $mp->render(array(
-			'cardNo'       => "4918914107195005",
-			'securityCode' => 123
-		)); ?>
+		<h3>Waiting 20 seconds to redirect.</h3>
+		<?php echo $mp->render(); ?>
+		<a href="javascript:paynow();">Pay Now</a>
 	</body>
 </html>

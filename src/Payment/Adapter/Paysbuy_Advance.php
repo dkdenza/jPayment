@@ -288,6 +288,46 @@ class Payment_Adapter_Paysbuy_Advance extends Payment_Adapter_AdapterAbstract {
 	}
 	
 	/**
+	 * State of success payment returned.
+	 * override from abstract 
+	 * 
+	 * @access public
+	 * @return bool
+	 */
+	public function isSuccessPosted()
+	{
+		if (parent::isSuccessPosted()) 
+		{
+			if (isset($_POST) && array_key_exists('result', $_POST))
+			{
+				$statusResult = substr($_POST['result'], 0, 2);
+				return (strcmp($statusResult, 99) != 0);
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * State of canceled payment returned.
+	 * override from abstract 
+	 * 
+	 * @access public
+	 * @return bool
+	 */
+	public function isCancelPosted()
+	{
+		if (parent::isSuccessPosted()) 
+		{
+			if (isset($_POST) && array_key_exists('result', $_POST)) 
+			{
+				$statusResult = substr($_POST['result'], 0, 2);
+				return ((strcmp($statusResult, 99) == 0) || $statusResult == '');
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * Build array data and mapping from API
 	 * 
 	 * @access public
@@ -315,9 +355,14 @@ class Payment_Adapter_Paysbuy_Advance extends Payment_Adapter_AdapterAbstract {
             'opt_name'         => "",
             'opt_email'        => "",
             'opt_mobile'       => "",
-            'opt_address'      => "",
-            'opt_detail'       => $this->_remark
+            'opt_address'      => ""
         );
+        
+        if ($this->_remark) {
+        	$extends = array_merge($extends, array(
+        		'opt_detail' => $this->_remark
+        	));
+        }
         
         $params = array_merge($pass_parameters, $extends);
 		$build_data = array_merge($this->_defaults_params, $params);	
@@ -363,15 +408,18 @@ class Payment_Adapter_Paysbuy_Advance extends Payment_Adapter_AdapterAbstract {
 		
 		$status = substr($postdata['result'], 0, 2);
 		$invoice = substr($postdata['result'], 2);
+		$amount = $this->_decimals($postdata['amt']);
+		
+		$statusResult = ($status == 00) ? "success" : "pending";
 		
 		$result = array(
 			'status' => true,
 			'data' => array(
 				'gateway'  => self::GATEWAY,
-				'status'   => (strcmp($status, 00)) ? "success" : "failed",
+				'status'   => $this->_mapStatusReturned($statusResult),
 				'invoice'  => $invoice,
 				'currency' => $this->_currency,
-				'amount'   => $postdata['amt'],				
+				'amount'   => $amount,				
 				'dump'     => serialize($postdata)
 			)
 		);
@@ -418,6 +466,9 @@ class Payment_Adapter_Paysbuy_Advance extends Payment_Adapter_AdapterAbstract {
 			
 			$methodResult = (string)$sxe->MethodResult;
 			$statusResult = (string)$sxe->StatusResult;
+			
+			$amount = (string)$sxe->AmountResult;
+			$amount = $this->_decimals($amount);
 
 			$result = array(
 				'status' => true,
@@ -426,7 +477,7 @@ class Payment_Adapter_Paysbuy_Advance extends Payment_Adapter_AdapterAbstract {
 					'status'   => $this->_mapStatusReturned($statusResult),
 					'invoice'  => $invoice,
 					'currency' => $this->_currency,
-					'amount'   => (string)$sxe->AmountResult,
+					'amount'   => $amount,
 					'dump'     => serialize($postdata)
 				),
 				'custom' => array(

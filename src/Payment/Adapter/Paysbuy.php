@@ -187,6 +187,46 @@ class Payment_Adapter_Paysbuy extends Payment_Adapter_AdapterAbstract {
 	}
 	
 	/**
+	 * State of success payment returned.
+	 * override from abstract 
+	 * 
+	 * @access public
+	 * @return bool
+	 */
+	public function isSuccessPosted()
+	{
+		if (parent::isSuccessPosted()) 
+		{
+			if (isset($_POST) && array_key_exists('result', $_POST))
+			{
+				$statusResult = substr($_POST['result'], 0, 2);
+				return (strcmp($statusResult, 99) != 0);
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * State of canceled payment returned.
+	 * override from abstract 
+	 * 
+	 * @access public
+	 * @return bool
+	 */
+	public function isCancelPosted()
+	{
+		if (parent::isSuccessPosted()) 
+		{
+			if (isset($_POST) && array_key_exists('result', $_POST)) 
+			{
+				$statusResult = substr($_POST['result'], 0, 2);
+				return ((strcmp($statusResult, 99) == 0) || $statusResult == '');
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * Build array data and mapping from API
 	 * 
 	 * @access public
@@ -242,6 +282,14 @@ class Payment_Adapter_Paysbuy extends Payment_Adapter_AdapterAbstract {
 	 * @access public
 	 * @return array (POST)
 	 */
+	/**
+	 * Get a post back result from API gateway
+	 * POST data from API
+	 * Only Paysbuy we re-check transaction 
+	 * 
+	 * @access public
+	 * @return array (POST)
+	 */
 	public function getFrontendResult()
 	{		
 		if (count($_POST) == 0 || !array_key_exists('apCode', $_POST)) {
@@ -251,15 +299,18 @@ class Payment_Adapter_Paysbuy extends Payment_Adapter_AdapterAbstract {
 		
 		$status = substr($postdata['result'], 0, 2);
 		$invoice = substr($postdata['result'], 2);
+		$amount = $this->_decimals($postdata['amt']);
+		
+		$statusResult = ($status == 00) ? "success" : "pending";
 		
 		$result = array(
 			'status' => true,
 			'data' => array(
 				'gateway'  => self::GATEWAY,
-				'status'   => (strcmp($status, 00)) ? "success" : "failed",
+				'status'   => $this->_mapStatusReturned($statusResult),
 				'invoice'  => $invoice,
 				'currency' => $this->_currency,
-				'amount'   => $postdata['amt'],				
+				'amount'   => $amount,				
 				'dump'     => serialize($postdata)
 			)
 		);
@@ -288,10 +339,13 @@ class Payment_Adapter_Paysbuy extends Payment_Adapter_AdapterAbstract {
 		
 		// invoice from response
 		$invoice = substr($postdata['result'], 2);
+		
+		// email to look up
+		$merchantEmail = $this->_merchantAccount;
 
 		try {
 			$params = array(
-				'merchantEmail' => $this->_merchantAccount, 
+				'merchantEmail' => $merchantEmail, 
 				'invoiceNo'     => $invoice,			 
 				'strApCode'     => $postdata['apCode']
 			);
@@ -303,6 +357,9 @@ class Payment_Adapter_Paysbuy extends Payment_Adapter_AdapterAbstract {
 			
 			$methodResult = (string)$sxe->MethodResult;
 			$statusResult = (string)$sxe->StatusResult;
+			
+			$amount = (string)$sxe->AmountResult;
+			$amount = $this->_decimals($amount);
 
 			$result = array(
 				'status' => true,
@@ -311,7 +368,7 @@ class Payment_Adapter_Paysbuy extends Payment_Adapter_AdapterAbstract {
 					'status'   => $this->_mapStatusReturned($statusResult),
 					'invoice'  => $invoice,
 					'currency' => $this->_currency,
-					'amount'   => (string)$sxe->AmountResult,
+					'amount'   => $amount,
 					'dump'     => serialize($postdata)
 				),
 				'custom' => array(

@@ -32,7 +32,7 @@ $mp = Payment::factory('paypal', array(
 /**
  * Set account
  */
-$mp->setMerchantAccount('buyer_1279773230_per@jquerytips.com');
+$mp->setMerchantAccount('admin_1279772013_biz@jquerytips.com');
 
 /**
  * Set sandbox environment
@@ -44,14 +44,20 @@ $mp->setSandboxMode(true);
  * Not work for all adapters
  */
 $mp->setLanguage('TH')
-	->setCurrency('THB');
+	->setCurrency('USD');
 	
 /** 
  * Set billing 
  */
 $mp->setInvoice('DEMO000'.rand(1, 99999))
 	->setPurpose('Buy Something')
-	->setAmount(10);
+	->setAmount(5);
+	
+/** 
+ * Set billing 
+ * use paypal custom field
+ */
+$mp->setRemark('Something');
 	
 /**
  * When gateway redirect back with success status
@@ -80,14 +86,13 @@ if ($mp->isCancelPosted())
  */
 if ($mp->isBackendPosted())
 {
-	echo "<h1>Backend Posted, keep the transaction data and update depend on status responded.</h1>";
-	
 	$result = $mp->getBackendResult();
 	$result = print_r($result, true);
 	
-	echo "<pre>".$result."</pre>";
-	file_put_contents('log.txt', $result);
+	$logfile = "../logs/".date('Y-m-d_H-i-s').".log";
+	file_put_contents($logfile, $result);
 	
+	echo "OK";
 	exit(0);
 }
 
@@ -101,13 +106,20 @@ if ($mp->isBackendPosted())
 			h3 { font-size: 1em; font-weight: normal; }
 		</style>
 		<script type="text/javascript">
-			function onDocumentReady() {
+			function paynow() {
 				document.getElementById('form-gateway').submit();
 			}
+			
+			function onDocumentReady() {
+				setTimeout(function() {
+					paynow();
+				}, 20000);
+			}			
 		</script>
 	</head>
 	<body onload="onDocumentReady();">
-		<h3>Waiting to redirect...</h3>
-		<?php echo $mp->render(array('custom' => "PAYPAL ONLY")); ?>
+		<h3>Waiting 20 seconds to redirect.</h3>
+		<?php echo $mp->render(); ?>
+		<a href="javascript:paynow();">Pay Now</a>
 	</body>
 </html>
