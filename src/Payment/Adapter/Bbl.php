@@ -254,18 +254,19 @@ class Payment_Adapter_Bbl extends Payment_Adapter_AdapterAbstract {
 		if (isset($_POST) && count($_POST) > 0)
 		{
 			$postdata = $_POST;
-			if ($postdata['successcode'] == 0)
+			if ($postdata['successcode'])
 			{
+				$statusResult = ($postdata['successcode'] == 0) ? "success" : "failed";
 				$invoice = $postdata['Ref'];
 				$ref = $postdata['PayRef'];
 				$result = array(
 					'status' => true,
 					'data' => array(
 						'gateway'  => self::GATEWAY,
-						'status'   => "success",
+						'status'   => $this->_mapStatusReturned($statusResult),
 						'invoice'  => $invoice,
 						'currency' => $this->_currency,
-						'amount'   => 0,				
+						'amount'   => $postdata['Amt'],				
 						'dump'     => serialize($postdata)
 					)
 				);
