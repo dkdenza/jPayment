@@ -87,6 +87,13 @@ if ($mp->isBackendPosted())
 	exit(0);
 }
 
+$mp->setAny('ref1', "Sub Ref1");
+$mp->setAny('ref2', "Sub Ref2");
+$mp->setAny('ref3', "Sub Ref3");
+$mp->setAny('ref4', "Sub Ref4");
+$mp->setAny('ref5', "Sub Ref5");
+
+
 ?>
 <!DOCTYPE html>
 <html>

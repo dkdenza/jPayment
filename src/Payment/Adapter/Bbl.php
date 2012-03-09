@@ -40,6 +40,16 @@ class Payment_Adapter_Bbl extends Payment_Adapter_AdapterAbstract {
 	protected $_gatewayUrl = "https://ipay.bangkokbank.com/b2c/eng/payment/payForm.jsp";
 	
 	/**
+	 * @var Reference var 
+	 * BBL Only
+	 */
+	protected $_ref1;
+	protected $_ref2;
+	protected $_ref3;
+	protected $_ref4;
+	protected $_ref5;
+ 	
+	/**
 	 * @var mapping to transfrom parameter from gateway
 	 */
 	protected $_defaults_params = array(
@@ -54,7 +64,12 @@ class Payment_Adapter_Bbl extends Payment_Adapter_AdapterAbstract {
 		'payMethod'  => "CC",
 		'orderRef'   => "",
 		'remark'     => "-",
-		'redirect'   => "30"
+		'redirect'   => "30",
+		'orderRef1'	 => "",
+		'orderRef2'	 => "",
+		'orderRef3'	 => "",
+		'orderRef4'	 => "",
+		'orderRef5'	 => ""
 	);
 	
 	/**
@@ -191,7 +206,12 @@ class Payment_Adapter_Bbl extends Payment_Adapter_AdapterAbstract {
 			'payType'    => "N",
 			'payMethod'  => $this->_method,
 			'orderRef'   => $this->_invoice,
-			'remark'     => $this->_remark
+			'remark'     => $this->_remark,
+			'orderRef1'  => $this->_ref1,
+			'orderRef2'  => $this->_ref2,
+			'orderRef3'  => $this->_ref3,
+			'orderRef4'  => $this->_ref4,
+			'orderRef5'  => $this->_ref5
 		);
 		$params = array_merge($pass_parameters, $extends);
 		$build_data = array_merge($this->_defaults_params, $params);

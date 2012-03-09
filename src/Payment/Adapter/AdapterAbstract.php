@@ -427,7 +427,38 @@ abstract class Payment_Adapter_AdapterAbstract implements Payment_Adapter_Adapte
 	public function getBackendUrl()
 	{
 		return $this->_backendUrl;
-	}	
+	}
+	
+	/**
+	 * Set any var
+	 * 
+	 * @access public
+	 * @param  string $name
+	 * @param  mixed $val
+	 * @return object class (chaining)
+	 */
+	public function setAny($name, $val)
+	{
+		$private_name = "_".(string)$name;
+		$this->{$private_name} = $val;
+		return $this;
+	}
+	
+	/**
+	 * Get any var
+	 * 
+	 * @access public
+	 * @param  string $name
+	 * @return mixed
+	 */
+	public function getAny($name)
+	{
+		$private_name = "_".(string)$name;
+		if ($this->{$private_name}) {
+			return $this->{$name};
+		}
+		return false;
+	}
 	
 	/**
 	 * State of success payment returned.
