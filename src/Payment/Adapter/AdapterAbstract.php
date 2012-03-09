@@ -85,6 +85,11 @@ abstract class Payment_Adapter_AdapterAbstract implements Payment_Adapter_Adapte
 	protected $_remark;
 	
 	/**
+	 * @var Client IP Address
+	 */
+	protected $_client_ip_address;
+	
+	/**
 	 * @var Gateway status returned mapping
 	 */
 	protected $_statusReturned = array(
@@ -326,6 +331,43 @@ abstract class Payment_Adapter_AdapterAbstract implements Payment_Adapter_Adapte
 	public function getRemark()
 	{
 		return $this->_remark;
+	}
+	
+	/**
+	 * Set client IP address
+	 * 
+	 * @access public
+	 * @param  string $val
+	 * @return object class (chaining)
+	 */
+	public function setClientIpAddress($val)
+	{
+		$this->_client_ip_address = $val;
+		return $this;
+	}
+	
+	/**
+	 * Get client IP address
+	 * 
+	 * @access public
+	 * @return string IP
+	 */
+	public function getClientIpAddress()
+	{
+		if (!$this->_client_ip_address)
+		{
+			if (!empty($_SERVER["HTTP_CLIENT_IP"])) {
+ 				$ip = $_SERVER["HTTP_CLIENT_IP"];
+			}
+			elseif (!empty($_SERVER["HTTP_X_FORWARDED_FOR"])) {
+ 				$ip = $_SERVER["HTTP_X_FORWARDED_FOR"];
+			}
+			else {
+				$ip = $_SERVER["REMOTE_ADDR"];
+			}
+			$this->_client_ip_address = $ip;
+		}
+		return $this->_client_ip_address;
 	}
 
 	/**

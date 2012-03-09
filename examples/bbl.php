@@ -39,7 +39,7 @@ $mp = Payment::factory('bbl', array(
  * Bbl we need to set both merchant and terminal
  */
 $mp->setMerchantAccount(array(
-	'merchantId' => "1347"
+	'merchantId' => "[MERCHANT ID]"
 ));
 
 /**

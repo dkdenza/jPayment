@@ -73,8 +73,8 @@ $adapterConfig = array(
 		'options' => array(
 			'sandboxMode'     => false,
 			'merchantAccount' => array(
-				'merchantId' => "401001071020001",
-				'terminalId' => "70341487"
+				'merchantId' => "[MERCHANT ID]",
+				'terminalId' => "[TERMINAL ID]"
 			),
 			'successUrl'      => $base_url."?action=progress",
 			'backendUrl'      => $base_url."?action=progress",
@@ -87,7 +87,7 @@ $adapterConfig = array(
 		'options' => array(
 			'sandboxMode'     => false,
 			'merchantAccount' => array(
-				'merchantId'     => "1347"
+				'merchantId'     => "[MERCHANT ID]"
 			),
 			'successUrl'      => $base_url."?action=progress",
 			'cancelUrl'       => $base_url."?action=progress",

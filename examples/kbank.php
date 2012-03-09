@@ -32,8 +32,8 @@ $mp = Payment::factory('kbank', array(
  * Kbank we need to set both merchant and terminal
  */
 $mp->setMerchantAccount(array(
-	'merchantId' => "401001071020001",
-	'terminalId' => "70341487"
+	'merchantId' => "[MERCHANT ID]",
+	'terminalId' => "[TERMINAL ID]"
 ));
 
 /** 
@@ -42,6 +42,11 @@ $mp->setMerchantAccount(array(
 $mp->setInvoice('0001')
 	->setPurpose('Buy Something')
 	->setAmount(10);
+	
+/**
+ * Set method accept
+ */
+$mp->setMethod('debit');
 	
 /**
  * When gateway redirect back with success status
