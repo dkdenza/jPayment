@@ -76,6 +76,7 @@ class Payment_Adapter_Paysbuy_Advance extends Payment_Adapter_AdapterAbstract {
 		'method'           => "01",
 		'opt_fix_method'   => 0,
 		'opt_fix_redirect' => 0,
+		'opt_detail'	   => "",
 		'language'         => "T",
 		'inv'              => "",
 		'itm'              => "",
@@ -302,20 +303,20 @@ class Payment_Adapter_Paysbuy_Advance extends Payment_Adapter_AdapterAbstract {
             'inv'              => $this->_invoice,
             'itm'              => $this->_purpose,
             'amt'              => $this->_amount,
-            'paypal_amt'       => '',
+            'paypal_amt'       => "",
             'curr_type'        => $this->_currency_maps[$this->_currency],
-            'com'              => '',
+            'com'              => "",
             'method'           => (int)$this->_method,
             'language'         => $this->_language_maps[$this->_language],
             'resp_front_url'   => $this->_successUrl,
             'resp_back_url'    => $this->_backendUrl,
             'opt_fix_method'   => $this->_forceMethod,
             'opt_fix_redirect' => 0,
-            'opt_name'         => '',
-            'opt_email'        => '',
-            'opt_mobile'       => '',
-            'opt_address'      => '',
-            'opt_detail'       => ''
+            'opt_name'         => "",
+            'opt_email'        => "",
+            'opt_mobile'       => "",
+            'opt_address'      => "",
+            'opt_detail'       => $this->_remark
         );
         
         $params = array_merge($pass_parameters, $extends);

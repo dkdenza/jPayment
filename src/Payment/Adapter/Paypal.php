@@ -45,7 +45,8 @@ class Payment_Adapter_Paypal extends Payment_Adapter_AdapterAbstract {
 		'amount'          => "",
 		'currency_code'   => "THB",
 		'discount_amount' => 0,
-		'quantity'        => 1
+		'quantity'        => 1,
+		'custom'		  => ""	
 	);
 	
 	/**
@@ -130,6 +131,7 @@ class Payment_Adapter_Paypal extends Payment_Adapter_AdapterAbstract {
 			'notify_url'    => $this->_backendUrl,
 			'currency_code' => $this->_currency_maps[$this->_currency],
 			'lc'            => $this->_language_maps[$this->_language],
+			'custom'		=> $this->_remark
 		);
 		$params = array_merge($pass_parameters, $extends);
 		$build_data = array_merge($this->_defaults_params, $params);

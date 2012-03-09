@@ -50,6 +50,7 @@ class Payment_Adapter_Paysbuy extends Payment_Adapter_AdapterAbstract {
 	protected $_defaults_params = array(
 		'currencyCode'   => "840",
 		'opt_fix_method' => 0,
+		'opt_detail'     => "",
 		'biz'            => "",
 		'inv'            => "",
 		'itm'            => "",
@@ -202,6 +203,7 @@ class Payment_Adapter_Paysbuy extends Payment_Adapter_AdapterAbstract {
 			'postURL'        => $this->_successUrl,
 			'reqURL'         => $this->_backendUrl,
 			'opt_fix_method' => $this->_forceMethod,
+			'opt_detail'	 => $this->_remark,
 			'currencyCode'   => $this->_currency_maps[$this->_currency]
 		);
 		$params = array_merge($pass_parameters, $extends);

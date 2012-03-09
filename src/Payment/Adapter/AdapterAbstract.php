@@ -80,6 +80,11 @@ abstract class Payment_Adapter_AdapterAbstract implements Payment_Adapter_Adapte
 	protected $_amount;
 	
 	/**
+	 * @var Remark, Note
+	 */
+	protected $_remark;
+	
+	/**
 	 * @var Gateway status returned mapping
 	 */
 	protected $_statusReturned = array(
@@ -297,6 +302,30 @@ abstract class Payment_Adapter_AdapterAbstract implements Payment_Adapter_Adapte
 	public function getAmount()
 	{
 		return $this->_amount;
+	}
+	
+	/**
+	 * Set remark or note
+	 * 
+	 * @access public
+	 * @param  string
+	 * @return object class (chaining)
+	 */
+	public function setRemark($val)
+	{
+		$this->_remark = $val;
+		return $this;
+	}
+	
+	/**
+	 * Get remark 
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function getRemark()
+	{
+		return $this->_remark;
 	}
 
 	/**

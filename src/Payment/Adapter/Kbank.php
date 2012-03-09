@@ -210,8 +210,17 @@ class Payment_Adapter_Kbank extends Payment_Adapter_AdapterAbstract {
 	 */
 	public function getBackendResult()
 	{		
-		// not implement yet.
-		//$crumbs = md5(self::HASHSUM.$this->_invoice);
+		if (isset($_POST) && count($_POST) > 0)
+		{
+			$postdata = $_POST;
+			return $postdata;
+		}
+		
+		$result = array(
+			'status' => false,
+			'msg'    => "Can not get data feed."
+		);
+		return $result;
 	}
 		
 }

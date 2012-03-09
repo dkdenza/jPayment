@@ -191,7 +191,7 @@ class Payment_Adapter_Bbl extends Payment_Adapter_AdapterAbstract {
 			'payType'    => "N",
 			'payMethod'  => $this->_method,
 			'orderRef'   => $this->_invoice,
-			'remark'     => "-"
+			'remark'     => $this->_remark
 		);
 		$params = array_merge($pass_parameters, $extends);
 		$build_data = array_merge($this->_defaults_params, $params);
@@ -254,7 +254,7 @@ class Payment_Adapter_Bbl extends Payment_Adapter_AdapterAbstract {
 		if (isset($_POST) && count($_POST) > 0)
 		{
 			$postdata = $_POST;
-			if ($postdata['successcode'])
+			if (array_key_exists('successcode', $postdata))
 			{
 				$statusResult = ($postdata['successcode'] == 0) ? "success" : "failed";
 				$invoice = $postdata['Ref'];
