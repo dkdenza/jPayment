@@ -71,7 +71,7 @@ $mp->setMethod('CC');
 $mp->setRemark('Something like note');
 
 /**
- * Set ref maximum is 5 [option]
+ * Set option fields maximum is 5 [optional]
  */
 $mp->setAny('ref1', "Sub Ref1");
 $mp->setAny('ref2', "Sub Ref2");
