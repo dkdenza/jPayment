@@ -1,6 +1,6 @@
 <?php
 /**
- * Payment
+ * jPayment Gateway
  *
  * This source file is subject to the new BSD license that is bundled
  * It is also available through the world-wide-web at this URL:
@@ -12,7 +12,7 @@
  * @category   Payment
  * @package    Payment
  * @copyright  Copyright (c) 2005-2011 jQueryTips.com
- * * @version    1.0.1
+ * @version    1.0.1
  */
  
 $logs = glob('*.log');
