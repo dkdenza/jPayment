@@ -12,7 +12,7 @@
  * @category   Payment
  * @package    Payment
  * @copyright  Copyright (c) 2005-2011 jQueryTips.com
- * @version    1.0b
+ * * @version    1.0.1
  */
 
 require_once('Payment/Exception.php');
