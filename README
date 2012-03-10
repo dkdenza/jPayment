@@ -19,7 +19,7 @@
 Requirements
 ------------
 
-The following requirements should be met prior to using PHPExcel:
+The following requirements should be met prior to using jPayment Gateway:
 * PHP version 5.2.0 or higher
 * libcurl
 
