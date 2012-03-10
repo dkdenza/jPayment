@@ -9,9 +9,7 @@
  * obtain it through the world-wide-web, please send an email
  * to admin@jquerytips.com so we can send you a copy immediately.
  *
- * @category   Payment
- * @package    Payment
- * @copyright  Copyright (c) 2005-2011 jQueryTips.com
+ * @copyright  Copyright (c) 2011 - 2012 jQueryTips (http://www.jquerytips.com)
  * @version    1.0.1
  */
 
@@ -112,7 +110,7 @@ $mp = null;
 /**
  * Action progress 
  */
-if ($action == 'progress')
+if (isset($_POST['submit']) && $action == 'progress')
 {
 	$adapter = $_POST['gateway'];
 	$options = $adapterConfig[$adapter]['options'];
@@ -160,6 +158,7 @@ if ($action == 'progress')
 		</style>
 	</head>
 	<body>		
+		<h2>Code Generator</h2>
 		<form method="post" action="?action=progress">
 			<p class="clearfix">
 				<label class="title">Select a Gateway:</label>
@@ -177,7 +176,7 @@ if ($action == 'progress')
 				<span class="currency">THB</span>
 			</p>
 			<p class="clearfix">
-				<input type="submit" value="Pay Now" />
+				<input type="submit" name="submit" value="Generate HTML Code" />
 			</p>
 		</form>
 		<?php if (is_object($mp)) : ?>

@@ -9,9 +9,7 @@
  * obtain it through the world-wide-web, please send an email
  * to admin@jquerytips.com so we can send you a copy immediately.
  *
- * @category   Payment
- * @package    Payment
- * @copyright  Copyright (c) 2005-2011 jQueryTips.com
+ * @copyright  Copyright (c) 2011 - 2012 jQueryTips (http://www.jquerytips.com)
  * @version    1.0.1
  */
  
