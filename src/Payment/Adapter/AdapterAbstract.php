@@ -135,7 +135,7 @@ abstract class Payment_Adapter_AdapterAbstract implements Payment_Adapter_Adapte
 					$this->$method($val);
 				}
 				else {
-					$this->$key = $val;
+					$this->setAny($key, $val);
 				}
 			}
 		}
