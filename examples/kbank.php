@@ -76,6 +76,9 @@ if ($mp->isBackendPosted())
 	$result = $mp->getBackendResult();
 	$result = print_r($result, true);
 	
+	print_r($result );
+	exit(0);
+	
 	$logfile = "../logs/".date('Y-m-d_H-i-s').".log";
 	file_put_contents($logfile, $result);
 	

@@ -200,7 +200,10 @@ class Payment_Adapter_Kbank extends Payment_Adapter_AdapterAbstract {
 	{
 		if (parent::isBackendPosted()) {
 			$pmgwresp = $_POST['PMGWRESP'];
-			$invoice = (int)substr($pmgwresp, 57, 12);
+			$invoice = substr($pmgwresp, 57, 12);
+			
+			// kbank return stupid "X", so we need to remove all "X"
+			return preg_replace('|^X+|', '', $invoice);
 		}
 		throw new Payment_Exception('Gateway invoice return from backend posted only.');
 	}
@@ -367,7 +370,7 @@ class Payment_Adapter_Kbank extends Payment_Adapter_AdapterAbstract {
 					$ended = $pos[1];
 					
 					$theValue = substr($pmgwresp, $begin, $ended);
-					$theValue = preg_replace('|X+|', '', $theValue);
+					$theValue = preg_replace('|^X+|', '', $theValue);
 					
 					$response[$var_name] = $theValue;
 				}		
