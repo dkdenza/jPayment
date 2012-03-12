@@ -185,6 +185,21 @@ class Payment_Adapter_Bbl extends Payment_Adapter_AdapterAbstract {
 	}
 	
 	/**
+	 * Get invoice return from gateway feed data
+	 * This invoice return from gateway, so don't need set method
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function getGatewayInvoice()
+	{	
+		if (parent::isBackendPosted()) {
+			return $_POST['Ref'];
+		}
+		throw new Payment_Exception('Gateway invoice return from backend posted only.');
+	}
+	
+	/**
 	 * Build array data and mapping from API
 	 * 
 	 * @access public

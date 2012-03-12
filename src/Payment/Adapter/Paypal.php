@@ -109,6 +109,21 @@ class Payment_Adapter_Paypal extends Payment_Adapter_AdapterAbstract {
 	{
 		return $this->_sandbox;
 	}
+	
+	/**
+	 * Get invoice return from gateway feed data
+	 * This invoice return from gateway, so don't need set method
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function getGatewayInvoice()
+	{
+		if (parent::isBackendPosted()) {
+			return $_POST['invoice'];
+		}
+		throw new Payment_Exception('Gateway invoice return from backend posted only.');
+	}
 
 	/**
 	 * Build array data and mapping from API

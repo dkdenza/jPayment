@@ -67,6 +67,14 @@ class Payment_Adapter_Kbank extends Payment_Adapter_AdapterAbstract {
 	 * @var status return for success
 	 */
 	protected $_success_group = array('00');
+	
+	/**
+	 * @var mapping payment methods
+  	 */
+	protected $_method_maps = array(
+		'credit' => "02",
+		'debit'  => "01"
+	);
 
 	/**
 	 * Construct the payment adapter
@@ -182,6 +190,22 @@ class Payment_Adapter_Kbank extends Payment_Adapter_AdapterAbstract {
 	}
 	
 	/**
+	 * Get invoice return from gateway feed data
+	 * This invoice return from gateway, so don't need set method
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function getGatewayInvoice()
+	{
+		if (parent::isBackendPosted()) {
+			$pmgwresp = $_POST['PMGWRESP'];
+			$invoice = (int)substr($pmgwresp, 57, 12);
+		}
+		throw new Payment_Exception('Gateway invoice return from backend posted only.');
+	}
+	
+	/**
 	 * State of success payment returned.
 	 * override from abstract 
 	 * 
@@ -247,15 +271,9 @@ class Payment_Adapter_Kbank extends Payment_Adapter_AdapterAbstract {
 			'URL2'        => $this->_successUrl,
 			'RESPURL'     => $this->_backendUrl,
 			'IPCUST2'     => $ip_address,
-			'CHECKSUM'    => $crumbs
+			'CHECKSUM'    => $crumbs,
+			'SHOPID'      => $this->_method_maps[$this->_method]
 		);
-		
-		// for debit card we have to put special var
-		if (strcmp($this->_method, 'debit') == 0) {
-			$extends = array_merge($extends, array(
-				'SHOPID' => "01"
-			));
-		}
 		
 		$params = array_merge($pass_parameters, $extends);
 		$build_data = array_merge($this->_defaults_params, $params);

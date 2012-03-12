@@ -283,6 +283,21 @@ class Payment_Adapter_Paysbuy_Advance extends Payment_Adapter_AdapterAbstract {
 	public function getForceMethod($val)
 	{
 		$this->_forceMethod = $val;
+	}	
+	
+	/**
+	 * Get invoice return from gateway feed data
+	 * This invoice return from gateway, so don't need set method
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function getGatewayInvoice()
+	{
+		if (parent::isBackendPosted()) {
+			return substr($_POST['result'], 2);
+		}
+		throw new Payment_Exception('Gateway invoice return from backend posted only.');
 	}
 	
 	/**
