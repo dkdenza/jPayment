@@ -251,6 +251,8 @@ class Payment_Adapter_Kbank extends Payment_Adapter_AdapterAbstract {
 	
 	/**
 	 * Build array data and mapping from API
+	 * [NOTE] Kbank can set feed data URL by the field "RESPURL", 
+	 * but you have to contact the bank to add this trust URL
 	 * 
 	 * @access public
 	 * @param  array $extends (default: array())

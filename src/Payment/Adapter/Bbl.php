@@ -202,6 +202,8 @@ class Payment_Adapter_Bbl extends Payment_Adapter_AdapterAbstract {
 	
 	/**
 	 * Build array data and mapping from API
+	 * [NOTE] Bbl cannot set feed data URL, 
+	 * so you have to contact the bank to add this trust URL
 	 * 
 	 * @access public
 	 * @param  array $extends (default: array())
