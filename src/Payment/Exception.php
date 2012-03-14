@@ -33,7 +33,8 @@ class Payment_Exception extends Exception
         if (version_compare(PHP_VERSION, '5.3.0', '<')) {
             parent::__construct($msg, (int) $code);
             $this->_previous = $previous;
-        } else {
+        } 
+        else {
             parent::__construct($msg, (int) $code, $previous);
         }
     }
