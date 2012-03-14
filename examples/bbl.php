@@ -108,6 +108,29 @@ if ($mp->isCancelPosted())
 /**
  * When gateway POSTED back with feed data returned
  */
+ 
+// Suppose feed data from gateway
+/*$_POST = array(
+	'prc'          => "0",
+    'src'          => "0",
+    'Ord'          => "000011417365",
+    'Ref'          => "69",
+    'PayRef'       => "4855028",
+    'successcode'  => "0",
+    'Amt'          => "1.00",
+    'Cur'          => "764",
+    'Holder'       => "Tee Pluss",
+    'AuthId'       => "552509",
+    'AlertCode'    => "",
+    'remark'       => "-",
+    'eci'          => "01",
+    'payerAuth'    => "A",
+    'sourceIp'     => "58.97.30.66",
+    'ipCountry'    => "**",
+    'cc0104'       => "5124",
+    'cc1316'       => "1776",
+    'issueCountry' => "764"
+);*/
 if ($mp->isBackendPosted()) 
 {
 	$result = $mp->getBackendResult();

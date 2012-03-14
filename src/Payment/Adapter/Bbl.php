@@ -193,11 +193,22 @@ class Payment_Adapter_Bbl extends Payment_Adapter_AdapterAbstract {
 	 */
 	public function getGatewayInvoice()
 	{	
-		if (isset($_POST['Ref'])) 
-		{
+		if (parent::isBackendPosted()) {
 			return $_POST['Ref'];
 		}
 		throw new Payment_Exception('Gateway invoice return from backend posted only.');
+	}
+	
+	/**
+	 * State of backend post to server.
+	 * override from abstract 
+	 * 
+	 * @access public
+	 * @return bool
+	 */
+	public function isBackendPosted()
+	{
+		return isset($_POST['Ref']);
 	}
 	
 	/**

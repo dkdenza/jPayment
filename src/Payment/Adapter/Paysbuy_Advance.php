@@ -20,7 +20,7 @@ class Payment_Adapter_Paysbuy_Advance extends Payment_Adapter_AdapterAbstract {
 	/**
 	 * Define Gateway name
 	 */
-	const GATEWAY = "Paysbuy Advance";
+	const GATEWAY = "Paysbuy";
 	
 	/**
 	 * @var Merchant ID

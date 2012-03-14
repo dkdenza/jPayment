@@ -71,11 +71,16 @@ if ($mp->isCancelPosted())
 /**
  * When gateway POSTED back with feed data returned
  */
+ 
+// Suppose feed data from gateway
+/*$_POST['PMGWRESP'] = '05XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX00000000015114032012152305000000000500XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXMASTERCARDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX764XXXXXXXXXXXX';*/
 if ($mp->isBackendPosted())
 {
 
 	$result = $mp->getBackendResult();
 	$result = print_r($result, true);
+	
+	echo $result; exit;
 	
 	$logfile = "../logs/".date('Y-m-d_H-i-s').".log";
 	file_put_contents($logfile, $result);

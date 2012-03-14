@@ -41,6 +41,11 @@ interface Payment_Adapter_AdapterInterface {
 	public function render($opts=array());
 	
 	/**
+	 * Get invoice return from gateway server
+	 */
+	public function getGatewayInvoice();
+	
+	/**
 	 * Get post frontend result from API gateway
 	 */
 	public function getFrontendResult();
