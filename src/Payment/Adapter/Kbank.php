@@ -349,7 +349,7 @@ class Payment_Adapter_Kbank extends Payment_Adapter_AdapterAbstract {
 			$postdata = $_POST;
 			if (array_key_exists('PMGWRESP', $postdata))
 			{
-				// mapping variables
+				// mapping variables from data responded
 				$pmgwresp = $postdata['PMGWRESP'];
 				$splitters = array(
 					'ResponseCode'  => array(1, 2),
@@ -398,7 +398,7 @@ class Payment_Adapter_Kbank extends Payment_Adapter_AdapterAbstract {
 				return $result;
 			}
 		}
-		
+				
 		$result = array(
 			'status' => false,
 			'msg'    => "Can not get data feed."
