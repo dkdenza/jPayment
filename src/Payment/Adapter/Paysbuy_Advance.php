@@ -50,12 +50,12 @@ class Payment_Adapter_Paysbuy_Advance extends Payment_Adapter_AdapterAbstract {
 	/**
 	 * @var Gateway authenticate URL
 	 */
-	protected $_gatewayAuthUrl = "http://www.paysbuy.com/api_paynow/api_paynow.asmx/api_paynow_authentication_new";
+	protected $_gatewayAuthUrl = "https://www.paysbuy.com/api_paynow/api_paynow.asmx/api_paynow_authentication_new";
 	
 	/**
 	 * @var Gateway URL
 	 */
-	protected $_gatewayUrl = "http://www.paysbuy.com/paynow.aspx";
+	protected $_gatewayUrl = "https://www.paysbuy.com/paynow.aspx";
 	
 	/**
 	 * @var Check payment transaction (available only paysbuy)
@@ -134,6 +134,7 @@ class Payment_Adapter_Paysbuy_Advance extends Payment_Adapter_AdapterAbstract {
 	
 	/**
 	 * Set to enable sandbox mode
+	 * Sandbox some methods not available in SSL mode.
 	 * 
 	 * @access public
 	 * @param  bool 
@@ -142,9 +143,14 @@ class Payment_Adapter_Paysbuy_Advance extends Payment_Adapter_AdapterAbstract {
 	public function setSandboxMode($val)
 	{
 		$this->_sandbox = $val;
-		if ($val == true) {
-			$this->_gatewayAuthUrl = str_replace('www.', 'demo.', $this->_gatewayAuthUrl);
-			$this->_gatewayUrl = str_replace('www.', 'demo.', $this->_gatewayUrl);
+		if ($val == true) 
+		{
+			$patterns = array(
+				'|www\.|' => "demo.",
+				'|https|' => "http"
+			);			
+			$this->_gatewayUrl = preg_replace(array_keys($patterns), array_values($patterns), $this->_gatewayUrl);
+			$this->_gatewayAuthUrl = preg_replace(array_keys($patterns), array_values($patterns), $this->_gatewayAuthUrl);
 		}
 		return $this;
 	}
