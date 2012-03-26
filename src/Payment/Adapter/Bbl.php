@@ -67,7 +67,8 @@ class Payment_Adapter_Bbl extends Payment_Adapter_AdapterAbstract {
 		'orderRef2'	 => "",
 		'orderRef3'	 => "",
 		'orderRef4'	 => "",
-		'orderRef5'	 => ""
+		'orderRef5'	 => "",
+		'templateId' => 1
 	);
 	
 	/**
@@ -238,7 +239,8 @@ class Payment_Adapter_Bbl extends Payment_Adapter_AdapterAbstract {
 			'orderRef2'  => $this->_ref2,
 			'orderRef3'  => $this->_ref3,
 			'orderRef4'  => $this->_ref4,
-			'orderRef5'  => $this->_ref5
+			'orderRef5'  => $this->_ref5,
+			'templateId' => "1"
 		);
 		$params = array_merge($pass_parameters, $extends);
 		$build_data = array_merge($this->_defaults_params, $params);
