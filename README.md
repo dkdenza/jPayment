@@ -1,5 +1,5 @@
 **************************************************************************************
-* jPayment Gateway
+* # jPayment Gateway
 *
 * Copyright (c) 2005 - 2011 jQueryTips.com
 *
