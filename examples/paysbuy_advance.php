@@ -31,11 +31,13 @@ $mp = Payment::factory('paysbuy_advance', array(
  *
  user : demo@paysbuy.com
  password : paysbuy123
+ pin: 1234
  PSBID: 8303545188
  Secure Code: 1586093A8F80CBB5003001B42F0EEB7C
  
  user : example@paysbuy.com
  password : psb12345
+ pin: 1234
  PSBID: 3687016837
  Secure Code:  B9350779BE7F822F9DF5033372E288CD
  */
@@ -49,7 +51,7 @@ $mp->setMerchantAccount(array(
  * Set payment method (depend on your account)
  * Set force method (cannot change after submitted)
  */
-$mp->setMethod('06')
+$mp->setMethod('01')
 	->setForceMethod(true);
 
 /**

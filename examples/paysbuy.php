@@ -30,20 +30,22 @@ $mp = Payment::factory('paysbuy', array(
  * Sandbox account
  user : demo@paysbuy.com
  password : paysbuy123
+ pin: 1234
  PSBID: 8303545188
  Secure Code: 1586093A8F80CBB5003001B42F0EEB7C
 
  user : example@paysbuy.com
  password : psb12345
+ pin: 1234
  PSBID: 3687016837
  Secure Code:  B9350779BE7F822F9DF5033372E288CD
  */
-$mp->setMerchantAccount('teepluss@gmail.com');
+$mp->setMerchantAccount('demo@paysbuy.com');
 
 /**
  * Set sandbox environment
  */
-$mp->setSandboxMode(false);
+$mp->setSandboxMode(true);
 
 /**
  * Custom gateway
@@ -56,8 +58,8 @@ $mp->setLanguage('TH')
  * Set payment method (depend on your account)
  * Set force method (cannot change after submitted)
  */
-$mp->setMethod('psb')
-	->setForceMethod(false);
+$mp->setMethod('cs')
+	->setForceMethod(true);
 	
 /** 
  * Set billing 
