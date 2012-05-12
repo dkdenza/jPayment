@@ -12,7 +12,7 @@
  * @copyright  Copyright (c) 2011 - 2012 jQueryTips (http://www.jquerytips.com)
  * @version    1.0.1
  */
-
+ 
 header('Location:examples/index.php#examples');
 
 ?>
