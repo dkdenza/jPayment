@@ -13,6 +13,7 @@
  * @version    1.0.1
  */
  
+// just a redirection
 header('Location:examples/index.php#examples');
 
 ?>
