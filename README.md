@@ -15,7 +15,7 @@
 *
 * @copyright  Copyright (c) 2011 - 2012 jQueryTips (http://www.jquerytips.com)
 * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
-* @version    1.0.1
+* @version    1.0.2
 **************************************************************************************
 
 Requirements
