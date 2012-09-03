@@ -22,6 +22,6 @@ error_reporting(E_ALL);
 /*
  * Include payment class
  */
-require_once('../src/Payment.php');
+require_once(dirname(__FILE__).'/../src/Payment.php');
 
 ?>

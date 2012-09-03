@@ -28,6 +28,16 @@ class Payment_Adapter_Bbl extends Payment_Adapter_AdapterAbstract {
 	private $_merchantId;
 	
 	/**
+	 * @var Username 
+	 */
+	private $_username;
+	
+	/**
+	 * @var Password 
+	 */
+	private $_password;
+	
+	/**
 	 * @var Payment Method
 	 */
 	private $_method = "CC";
@@ -36,6 +46,11 @@ class Payment_Adapter_Bbl extends Payment_Adapter_AdapterAbstract {
 	 * @var Gateway URL
 	 */
 	protected $_gatewayUrl = "https://ipay.bangkokbank.com/b2c/eng/payment/payForm.jsp";
+	
+	/**
+	 * @var Check payment transaction (available only paysbuy)
+	 */
+	protected $_checkUrl = "https://ipay.bangkokbank.com/b2c/eng/merchant/api/orderApi.jsp";
 	
 	/**
 	 * @var Reference var 
@@ -156,6 +171,56 @@ class Payment_Adapter_Bbl extends Payment_Adapter_AdapterAbstract {
 	public function getMerchantId()
 	{
 		return $this->_merchantId;
+	}
+	
+	/**
+	 * Set gateway username
+	 * API require username to access logs
+	 * 
+	 * @access public
+	 * @param  string $val
+	 * @return object class (chaining)
+	 */
+	public function setUsername($val)
+	{
+		$this->_username = $val;
+		return $this;
+	}
+	
+	/**
+	 * Get gateway username
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function getUsername()
+	{
+		return $this->_username;
+	}
+	
+	/**
+	 * Set gateway password
+	 * API require password to access
+	 * 
+	 * @access public
+	 * @param  string $val
+	 * @return object class (chaining)
+	 */
+	public function setPassword($val)
+	{
+		$this->_password = $val;
+		return $this;
+	}
+	
+	/**
+	 * Get gateway username
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function getPassword()
+	{
+		return $this->_password;
 	}
 	
 	/**
@@ -329,6 +394,53 @@ class Payment_Adapter_Bbl extends Payment_Adapter_AdapterAbstract {
 		$result = array(
 			'status' => false,
 			'msg'    => "Can not get data feed."
+		);
+		return $result;
+	}
+	
+	/**
+	 * Lookup invoice status
+	 *
+	 * Using RESTFUL API to get invoice status
+	 * 
+	 * @access public
+	 * @param  array $params (default: array())
+	 * @return array
+	 */
+	public function lookUp($params=array())
+	{
+		$defaults = array(
+            'merchantId' => $this->_merchantId,
+            'loginId'    => $this->_username,
+            'password'   => $this->_password,
+            'actionType' => 'Query',
+            'orderRef'   => $this->_invoice,
+            'payRef'     => null
+		);
+		$params = array_merge($defaults, $params);
+
+		$response = $this->_makeRequest($this->_checkUrl, $params);
+		if ($response['status']) 
+		{
+			$xmlstr = new SimpleXMLElement($response['response']);
+			$record = $xmlstr->record;
+			
+			$statusResult = ($record->orderStatus == 'Accepted') ? 'success' : 'pending';
+			$result = array(
+				'status' => true,
+				'data'   => array(
+					'gateway'  => self::GATEWAY,
+					'status'   => $this->_mapStatusReturned($statusResult),
+					'invoice'  => (string)$record->ref,
+					'amount'   => (string)$record->amt
+				)
+			);
+			return $result;
+		}
+		
+		$result = array(
+			'status' => false,
+			'msg'    => 'Can not get data feed.'
 		);
 		return $result;
 	}
