@@ -583,14 +583,14 @@ abstract class Payment_Adapter_AdapterAbstract implements Payment_Adapter_Adapte
 	 * @param  array
 	 * @return string HTML
 	 */
-	protected function _makeFormPayment($attrs=array())
+	protected function _makeFormPayment($attrs=array(), $method = 'POST')
 	{
 		$hiddens = array();
 		foreach ($attrs as $attr_key => $attr_val) {
 			$hiddens[] = '<input type="hidden" name="'.$attr_key.'" value="'.$attr_val.'" />' . "\n";
 		}
 		$form = '
-			<form method="post" action="'.$this->_gatewayUrl.'" id="form-gateway">
+			<form method="'.$method.'" action="'.$this->_gatewayUrl.'" id="form-gateway">
 				'.implode('', $hiddens).'
 			</form>
 		';

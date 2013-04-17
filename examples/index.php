@@ -30,6 +30,7 @@
 			<li><a href="paysbuy_advance.php">Paysbuy API Usage</a></li>
 			<li><a href="kbank.php">Kasikorn Bank Usage</a></li>
 			<li><a href="bbl.php">Bangkok Bank Usage</a></li>
+			<li><a href="amex.php">Amex</a>
 			<!-- <li><a href="two_checkout.php">2Checkout Usage</a></li> -->
 			<li><a href="code_wizard.php">Code Wizard</a></li>
 		</ul>

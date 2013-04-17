@@ -18,71 +18,71 @@
  */
 require_once('config.inc.php');
 
+//582
+//345678000000007
+
+
+
+
 /**
  * Instance payment class
  */
-$mp = Payment::factory('paysbuy', array(
+$mp = Payment::factory('amex', array(
 	'successUrl'    => "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."?action=process",
-	'backendUrl'    => "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."?action=process"
+	'backendUrl'    => "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."?action=process"	
 ));
 
 /**
- * Sandbox account
- user : demo@paysbuy.com
- password : paysbuy123
- pin: 1234
- PSBID: 8303545188
- Secure Code: 1586093A8F80CBB5003001B42F0EEB7C
-
- user : example@paysbuy.com
- password : psb12345
- pin: 1234
- PSBID: 3687016837
- Secure Code:  B9350779BE7F822F9DF5033372E288CD
+ * Set merchant 
  */
-$mp->setMerchantAccount('demo@paysbuy.com');
-
-/**
- * Set sandbox environment
- */
-$mp->setSandboxMode(true);
+$mp->setMerchantAccount(array(
+	'merchantId'   => "test9882541469",
+	'username'     => "mglobemallama",
+	'password'     => "thailand0",
+	'accessCode'   => "BD7D92C7",
+	'secureCode'   => "FDE4C65CB245253A87942F88BA9D3B08"
+))->setSandboxMode(true);
 
 /**
  * Custom gateway
  * Not work for all adapters
  */
-$mp->setLanguage('TH')
-	->setCurrency('THB');
+$mp->setLanguage('EN');
+	
+/** 
+ * Set billing 
+ */
+$invoice = 'DEMO000'.rand(1, 99999);
+$mp->setInvoice($invoice)
+	->setPurpose('PHP VPC 3-Party')
+	->setAmount(100);
 
 /**
- * Set payment method (depend on your account)
- * Set force method (cannot change after submitted)
+ * Set remark (This is unique)
  */
-$mp->setMethod('cs')
-	->setForceMethod(true);
-
-/**
- * Set billing
- */
-$mp->setInvoice('DEMO00000C08')
-	->setPurpose('Buy Something')
-	->setAmount(1);
-
-/**
- * Set remark
- */
-$mp->setRemark('Something to note.');
+$mp->setRemark($invoice . ' Order Info');
 
 /**
  * When gateway redirect back with success status
- */
+ */	
 if ($mp->isSuccessPosted())
 {
 	echo "<h1>Success Posted, just redirect the user to thank you page.</h1>";
-
+	
 	$result = $mp->getFrontendResult();
-	echo "<pre>".print_r($result, true)."</pre>";
-
+	//echo "<pre>".print_r($result, true)."</pre>";
+	
+	if (isset($result['data']['transaction_id']))
+	{
+		
+		$transaction_id = $result['data']['transaction_id'];
+		$ref = $result['data']['invoice'];
+		$capture = $result['data']['capture'];
+		
+		$capture = $mp->capture($transaction_id, $ref, $capture);
+		
+	}
+	
 	exit(0);
 }
 
@@ -102,13 +102,14 @@ if ($mp->isBackendPosted())
 {
 	$result = $mp->getBackendResult();
 	$result = print_r($result, true);
-
+	
 	$logfile = "../logs/".date('Y-m-d_H-i-s').".log";
 	file_put_contents($logfile, $result);
-
+	
 	echo "OK";
 	exit(0);
 }
+
 
 ?>
 <!DOCTYPE html>
@@ -123,12 +124,12 @@ if ($mp->isBackendPosted())
 			function paynow() {
 				document.getElementById('form-gateway').submit();
 			}
-
+			
 			function onDocumentReady() {
 				setTimeout(function() {
 					paynow();
-				}, 20000);
-			}
+				}, 20000000);
+			}			
 		</script>
 	</head>
 	<body onload="onDocumentReady();">

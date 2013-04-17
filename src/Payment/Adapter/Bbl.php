@@ -61,29 +61,35 @@ class Payment_Adapter_Bbl extends Payment_Adapter_AdapterAbstract {
 	protected $_ref3;
 	protected $_ref4;
 	protected $_ref5;
+	
+	/**
+	 * @var BBL prefix
+	 */
+	protected $_prefix;
  	
 	/**
 	 * @var mapping to transfrom parameter from gateway
 	 */
 	protected $_defaults_params = array(
-		'merchantId' => "",
-		'currCode'   => "764",
-		'lang'       => "E",
-		'amount'     => "",
-		'successUrl' => "",
-		'failUrl'    => "",
-		'cancelUrl'  => "",
-		'payType'    => "N",
-		'payMethod'  => "CC",
-		'orderRef'   => "",
-		'remark'     => "-",
-		'redirect'   => "30",
-		'orderRef1'	 => "",
-		'orderRef2'	 => "",
-		'orderRef3'	 => "",
-		'orderRef4'	 => "",
-		'orderRef5'	 => "",
-		'templateId' => 1
+		'merchantId'  => "",
+		'currCode'    => "764",
+		'lang'        => "E",
+		'amount'      => "",
+		'successUrl'  => "",
+		'failUrl'     => "",
+		'cancelUrl'   => "",
+		'payType'     => "N",
+		'payMethod'   => "CC",
+		'orderRef'    => "",
+		'remark'      => "-",
+		'redirect'    => "30",
+		'orderRef1'   => "",
+		'orderRef2'   => "",
+		'orderRef3'   => "",
+		'orderRef4'   => "",
+		'orderRef5'   => "",
+		'templateId'  => 1,
+		'prefix'      => ""
 	);
 	
 	/**
@@ -305,10 +311,14 @@ class Payment_Adapter_Bbl extends Payment_Adapter_AdapterAbstract {
 			'orderRef3'  => $this->_ref3,
 			'orderRef4'  => $this->_ref4,
 			'orderRef5'  => $this->_ref5,
-			'templateId' => "1"
+			'templateId' => "1",
+			'prefix'     => $this->_prefix
 		);
 		$params = array_merge($pass_parameters, $extends);
 		$build_data = array_merge($this->_defaults_params, $params);
+		
+		print_r($build_data ); exit;
+		
 		return $build_data;
 	}
 	
